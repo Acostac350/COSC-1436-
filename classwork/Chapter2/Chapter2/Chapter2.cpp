@@ -143,9 +143,9 @@ int main()
     const double Pie = 3.14159;
 
     // A = Pi * R^2
-    double areaCircle = pi * (radius * radius);
+  //  double areaCircle = pi * (radius * radius);
 
-    const int numberOfLabGrades = 5;
-    const int numberOfExamGrades = 4;
+    // const int numberOfLabGrades = 5;
+    // const int numberOfExamGrades = 4;
 
 }
