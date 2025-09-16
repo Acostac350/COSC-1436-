@@ -17,7 +17,7 @@ int main()
     std::string firstName, surName;
     
     std::cout << "Please enter your name: "; std::cin >> firstName;
-    getline(std::cin, surName);
+    std::getline(std::cin, surName);
     double lab1, lab2, lab3, lab4;
     
     std::cout << "Enter Lab 1: "; std::cin >> lab1;
@@ -54,7 +54,7 @@ int main()
     std::cout << "Exam 1 = " << exam1 << std::endl; std::cout << "Exam 2 = " << exam2 << std::endl;
     std::cout << "Exam 3 = " << exam3 << std::endl; 
     std::cout << "\n";
-    std::cout << "Your Exam Average is = " << examAverage << std::endl;
+    std::cout << "Your Exam Average is = " << examAverage;
     std::cout << "\n";
    
     std::cout << firstName << surName << ", Your class grade is listed as follow: " << std::endl;
@@ -65,6 +65,7 @@ int main()
     std::cout << "Final Exam is (10%) = " << finalExam << " %" << std::endl;
     std::cout << "Class Average = " << classAverage << " %" << std::endl;
 
+    return 0;
   
 }
 
