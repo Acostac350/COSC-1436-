@@ -1,7 +1,41 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <iomanip>
+
 void main()
+{
+    //Get values for X and Y
+    std::cout << "Enter values for X and Y: ";
+
+    double x, y;
+    std::cin >> x >> y;
+
+    //Function X Y Result
+    // ----------------------------------
+    
+    std::cout << std::fixed << std::setprecision(4);
+    std::cout << std::setw(9) << std::left << "Function " << std::setw(7) << " X " << std::setw(7) << " Y " 
+              << std::setw(12) << "Result" << std::endl;
+    std::cout << std::setw(35) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+
+    std::cout << std::setw(9) << std::left << "pow " << std::setw(7) << x << std::setw(7) << y
+              << std::setw(12) << pow(x, y) << std::endl;
+    std::cout << std::setw(9) << std::left  << "sqrt " << std::setw(7) << x << std::setw(7) << y
+              << std::setw(12) << sqrt(x) << std::endl;
+
+    std::cout << std::setw(9) << std::left <<  "ceil " << std::setw(7) << x << std::setw(7) << y
+              << std::setw(12) << ceil(x) << std::endl;
+    std::cout << std::setw(9) << std::left << "floor " << std::setw(7) << x << std::setw(7) << y
+              << std::setw(12) << floor(x) << std::endl;
+
+    std::cout << std::setw(9) << std::left << "round " << std::setw(7) << x << std::setw(7) << y
+              << std::setw(12) << round(x) << std::endl;
+    std::cout << std::setw(9) << std::left << "trunc " << std::setw(7) << x << std::setw(7) << y
+              << std::setw(12) << trunc(x) << std::endl;
+}
+
+void ExpressionDemo()
 {
     // promp user for radius of circle
     std::cout << "Enter Radius ";
@@ -117,5 +151,7 @@ void main()
 
     result = exp(4); 
     result = log(exp(4)); // 4
+
+    // Formatted output.
 
 }

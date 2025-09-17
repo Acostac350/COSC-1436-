@@ -44,19 +44,19 @@ int main()
     std::cout << firstName << surName << ", Your Lab grades are:  " << std::endl; std::cout << "Lab 1 = " << lab1 << std::endl;
     std::cout << "Lab 2 = " << lab2 << std::endl; std::cout << "Lab 3 = " << lab3 << std::endl; 
     std::cout << "Lab 4 = " << lab4 << std::endl; 
-    std::cout << "\n";
+    // std::cout << "\n";
     
     std::cout << "Your Lab Average is = " << labAverage << std::endl;
-    // std::cout << "\n";
-    std::cout << firstName << surName << ", Your Exam grades are: " << std::endl;
-    // std::cout << "\n";
+    std::cout << "\n";
+    
+    std::cout << firstName << surName << ", Your Exam grades are: ";
+    std::cout << "\n";
     std::cout << "Exam 1 = " << exam1 << std::endl; std::cout << "Exam 2 = " << exam2 << std::endl;
     std::cout << "Exam 3 = " << exam3 << std::endl; 
-    std::cout << "Your Exam Average is = " << examAverage << std::endl;
-    // std::cout << "\n";
+    std::cout << "Your Exam Average is = " << examAverage << "\n";
    
-    std::cout << firstName << surName << ", Your class grade is listed as follow: " << std::endl;
-    std::cout << "\n";
+    std::cout << firstName << surName << ", Your class grade is listed as followed: " << "\n" << std::endl;
+    
     std::cout << "Lab Average (65%) = " << labAverage << " %" << std::endl;
     std::cout << "Exam Average (20%) = " << examAverage << " %" << std::endl;
     std::cout << "Participation (5%) = " << participation << " %" << std::endl;
