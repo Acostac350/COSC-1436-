@@ -15,7 +15,6 @@ int main()
     // Used \n because I wanted a space between my credentials and the project
 
     std::string firstName, surName;
-    
     std::cout << "Please enter your name: "; std::cin >> firstName;
     std::getline(std::cin, surName);
     double lab1, lab2, lab3, lab4;
@@ -48,14 +47,13 @@ int main()
     std::cout << "\n";
     
     std::cout << "Your Lab Average is = " << labAverage << std::endl;
-    std::cout << "\n";
+    // std::cout << "\n";
     std::cout << firstName << surName << ", Your Exam grades are: " << std::endl;
-    std::cout << "\n";
+    // std::cout << "\n";
     std::cout << "Exam 1 = " << exam1 << std::endl; std::cout << "Exam 2 = " << exam2 << std::endl;
     std::cout << "Exam 3 = " << exam3 << std::endl; 
-    std::cout << "\n";
-    std::cout << "Your Exam Average is = " << examAverage;
-    std::cout << "\n";
+    std::cout << "Your Exam Average is = " << examAverage << std::endl;
+    // std::cout << "\n";
    
     std::cout << firstName << surName << ", Your class grade is listed as follow: " << std::endl;
     std::cout << "\n";
