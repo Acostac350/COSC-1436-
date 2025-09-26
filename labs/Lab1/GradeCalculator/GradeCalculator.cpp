@@ -1,6 +1,6 @@
 /*
 * Ivan Acosta Carrasco ID #1869290
-* Lab#1
+* Lab 1
 * Professor Michael Taylor
 * COSC-1436 Fall 2025
 */
@@ -14,7 +14,6 @@ int main()
     std::cout << "Ivan Acosta Carrasco #1869290" << std::endl; 
     std::cout << "COSC 1436 Fall 2025" << std::endl << std::endl;
     
-    // std::cout << std::fixed << std::setprecision2); USE FOR LATER
     std::string firstName, surName;
     std::cout << "Please enter your name: "; 
     std::cin >> firstName;
@@ -39,8 +38,8 @@ int main()
     std::cin >> exam2;
     std::cout << "Enter Exam 3: "; 
     std::cin >> exam3;
+
     double labAverage = (lab1 + lab2 + lab3 + lab4) / 4;
-    
     double participation, finalExam;
    
     std::cout << "Enter Participation Grade: "; 
@@ -48,7 +47,7 @@ int main()
     std::cout << "Enter Final Exam Grade: "; 
     std::cin >> finalExam;
     std::cout << "\n";
-    // used \n because I don't know another way to break lines besides endl and \n - Also reads better
+    
     double examAverage = (exam1 + exam2 + exam3) / 3;
    
     double classAverage = (labAverage * 0.65) + (examAverage * 0.20) + (participation * 0.05) + (finalExam * 0.10);
