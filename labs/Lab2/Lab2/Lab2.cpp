@@ -33,7 +33,7 @@ int main()
     std::cin >> interestRate;
 
     // Ensure the interest rate is within valid range
-    while (interestRate < 1.0 || interestRate > 100.0)
+    while (interestRate < 1 || interestRate > 100)
     {
         std::cout << "Invalid value. Interest rate must be from 1% to 100%." << std::endl;
         std::cin >> interestRate;
@@ -51,8 +51,8 @@ int main()
     }
 
     double initialBalance = static_cast<double>(loanAmount);  // to Initialize outside loop
-    double totalPaid = 0.0;
-    double totalInterest = 0.0;
+    double totalPaid = 0;
+    double totalInterest = 0;
 
     // Table needs adjustments
     std::cout << std::endl;
@@ -66,22 +66,22 @@ int main()
     std::cout << std::setw(83) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
     for (int month = 1; month <= 12; ++month)
     {
-        double currentPayment = 0.0;
-        double monthlyInterest = 0.0;
+        double currentPayment = 0;
+        double monthlyInterest = 0;
         double endingBalance = initialBalance; 
         double afterPaymentBalance;  // Temp helper for clarity. New addition
 
         if (month == 1)
         {
             // First month - no payment, no interest
-            currentPayment = 0.0;
-            monthlyInterest = 0.0;
+            currentPayment = 0;
+            monthlyInterest = 0;
             endingBalance = initialBalance;
         } else if (initialBalance <= 0)
         {
-            currentPayment = 0.0;
-            monthlyInterest = 0.0;
-            endingBalance = 0.0;
+            currentPayment = 0;
+            monthlyInterest = 0;
+            endingBalance = 0;
         } else
         {
             // Cap payment at remaining balance
@@ -94,10 +94,10 @@ int main()
 
             // Calc monthly interest on balance after payment
             if (afterPaymentBalance <= 0) {
-                monthlyInterest = 0.0;
-                endingBalance = 0.0;
+                monthlyInterest = 0;
+                endingBalance = 0;
             } else {
-                monthlyInterest = afterPaymentBalance * (interestRate / 100.0);
+                monthlyInterest = afterPaymentBalance * (interestRate / 100);
                 endingBalance = afterPaymentBalance + monthlyInterest;
             }
 
