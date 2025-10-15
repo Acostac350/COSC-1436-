@@ -105,7 +105,7 @@ int main()
             totalPaid += currentPayment;
             totalInterest += monthlyInterest;
         }
-
+ 
         // Output need to come back and FIX
         std::cout << std::setw(8) << month
             << "$ " << std::setw(20) << std::fixed << std::setprecision(2) << initialBalance
