@@ -23,7 +23,7 @@ int main()
     // Loan amount is within valid range
     while (loanAmount < 1 || loanAmount > 1000)
     {
-        std::cout << "Invalid value. Please enter a numeric value between 1$ and 1,000$." << std::endl;
+        std::cout << "Invalid value. Please enter a numeric value between $1 and $1,000." << std::endl;
         std::cin >> loanAmount;
     }
 
@@ -32,10 +32,10 @@ int main()
     std::cout << "Please enter the Interest rate (%): ";
     std::cin >> interestRate;
 
-    // Ensure the interest rate is within valid range
+    // Making sure the interest rate is within valid range
     while (interestRate < 1 || interestRate > 100)
     {
-        std::cout << "Invalid value. Interest rate must be from 1% to 100%." << std::endl;
+        std::cout << "Invalid value. Please enter the interest rate (%) between 1.0 and 100.0: " << std::endl;
         std::cin >> interestRate;
     }
 
@@ -53,17 +53,18 @@ int main()
     double initialBalance = static_cast<double>(loanAmount);  // to Initialize outside loop
     double totalPaid = 0;
     double totalInterest = 0;
-
-    // Table needs adjustments
     std::cout << std::endl;
+
     // Output table
-    std::cout << std::setw(8) << std::left << "Month:"
-        << std::setw(20) << "Loan Balance:"
-        << std::setw(20) << "Payment:"
-        << std::setw(20) << "Interest:"
-        << std::setw(20) << " New Balance:"
-        << std::endl;
-    std::cout << std::setw(83) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+    std::cout << std::left 
+              << std::setw(8)  << "Month:"
+              << std::setw(20) << "Loan Balance:"
+              << std::setw(20) << "Payment:"
+              << std::setw(20) << "Interest:"
+              << std::setw(20) << " New Balance:"
+              << std::endl;
+    std::cout << std::setw(81) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+    
     for (int month = 1; month <= 12; ++month)
     {
         double currentPayment = 0;
@@ -106,7 +107,7 @@ int main()
             totalInterest += monthlyInterest;
         }
  
-        // Output need to come back and FIX
+        // Output
         std::cout << std::setw(8) << month
             << "$ " << std::setw(20) << std::fixed << std::setprecision(2) << initialBalance
             << "$ " << std::setw(20) << std::fixed << std::setprecision(2) << currentPayment
@@ -118,11 +119,11 @@ int main()
         initialBalance = endingBalance;
     }
 
-    std::cout << std::setw(83) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+    std::cout << std::setw(81) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
     std::cout << "Initial Loan Amount: $" << std::fixed << std::setprecision(2) << loanAmount << std::endl;
     std::cout << "Total Interest Paid: $" << std::fixed << std::setprecision(2) << totalInterest << std::endl;
     std::cout << "Total Amount Paid: $" << std::fixed << std::setprecision(2) << totalPaid << std::endl;
 
     return 0;
 
-};
+}
