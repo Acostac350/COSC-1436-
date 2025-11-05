@@ -374,8 +374,48 @@ void ArrayDemo()
 }
 #pragma endregion
 
+void DisplayRow(int values[], int size)
+{
+    for (int row = 0; row < size; ++row)
+    {
+        //Do stuff here
+        std::cout << values[row] << " ";
+    }
+}
+
+// All dimensions beyond the first must be specified in parameter declaration
+void DisplayTable(int table[][31], int size)
+{
+    for (int row = 0; row < size; ++row)
+    {
+      DisplayRow(table[row], 31);
+      std::cout << std::endl;
+    }
+}
+
+void MultidimensionalArrayDemo()
+{
+    // Months are the rows, days are the columns.
+    // Init syntax is 1 row at a time
+    //int months[12][31] = { 1, 2, 3, 4, 5, };
+    int months[12][31] = {
+                            {1, 2, 3, 4, 5,}, // row 1
+                            {2, 4, 6, 8, 10}, // row 2
+                         };
+
+    for (int row = 0; row < 12; ++row)
+        for (int col = 0; col < 31; ++col)
+        {
+            //Do stuff here
+            months[row][col] = (row + 1) * (col + 1);
+        }
+
+        DisplayTable(months, 12);
+}
+
 int main()
 {
+    MultidimensionalArrayDemo();
     //ArrayDemo();
     //std::cout << Factorial(5) << std::endl;
 
