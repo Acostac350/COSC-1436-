@@ -9,6 +9,7 @@
 //Movie details
 struct Movie
 {
+    int id;                     //Unique identifier
     std::string title;          //Required
     std::string description;    //Optional
     int runLength;              //Required, 0
@@ -137,13 +138,29 @@ std::string ReadString(std::string message, bool isRequired)
 /// <param name="size">Size of the array</param>
 /// <param name="movie">Movie to add</param>
 /// <returns>Index of new movie if inserted or -1 otherwise.</returns>
-int AddToMovieArray(Movie movies[], int size, Movie movie)
+int AddToMovieArray(Movie* movies[], int size, Movie* movie)
 {
+    static int nextId = 1;
+
+    //Validate parameters first
+    // Pointers generally should not null
+    if (movie == nullptr)
+    {
+        DisplayError("Invalid movie");
+        return -1;
+    };
+
     //Enumerate the array looking for the first blank movie
     for (int index = 0; index < size; ++index)
     {
-        if (movies[index].title == "")
+        //if (movies[index].title == "")        
+        //if (movies[index] == nullptr)
+        if (!movies[index])
         {
+            //Set unique ID of movie
+            //movie.id = 0;
+            movie->id = nextId++;
+
             //Set the array element
             movies[index] = movie;
             return index;
@@ -158,9 +175,10 @@ int AddToMovieArray(Movie movies[], int size, Movie movie)
 /// <remarks>
 /// More details including paragraphs of data if you want.
 /// </remarks>
-void ViewMovie(Movie movie)
+void ViewMovie(Movie* movie)
 {
-    if (movie.title == "")
+    //if (movie.title == "")
+    if (!movie)
     {
         DisplayWarning("No movies exist");
         return;
@@ -173,44 +191,46 @@ void ViewMovie(Movie movie)
     //    Is Classic? 
     //    [Description]
     std::cout << std::fixed << std::setprecision(1) << std::endl;
-    std::cout << movie.title << " (" << movie.releaseYear << ")" << std::endl;
-    std::cout << "Run Length " << movie.runLength << " mins" << std::endl;
-    std::cout << "Genres " << movie.genres << std::endl;
-    std::cout << "Is Classic? " << (movie.isClassic ? "Yes" : "No") << std::endl;
-    if (movie.description != "")
-        std::cout << movie.description << std::endl;
+    std::cout << "Id " << movie->id << std::endl;
+    std::cout << movie->title << " (" << movie->releaseYear << ")" << std::endl;
+    std::cout << "Run Length " << movie->runLength << " mins" << std::endl;
+    std::cout << "Genres " << movie->genres << std::endl;
+    std::cout << "Is Classic? " << (movie->isClassic ? "Yes" : "No") << std::endl;
+    if (movie->description != "")
+        std::cout << movie->description << std::endl;
     std::cout << std::endl;
 }
 
-void ViewMovies(Movie movies[], int size)
+void ViewMovies(Movie* movies[], int size)
 {
     //Enumerate movies until we run out
     //for (Movie movie: movies)
     for (int index = 0; index < size; ++index)
     {
-        if (movies[index].title == "")
-            return;
-
-        ViewMovie(movies[index]);
+        //if (movies[index].title == "")
+        //  return;
+        if (movies[index])
+            ViewMovie(movies[index]);
     };
 }
 
 /// <summary>Prompt user and add movie details.</summary>
-Movie AddMovie()
+Movie* AddMovie()
 {
-    Movie movie;// = {0};
+    //Movie movie;// = {0};
+    Movie* movie = new Movie;
 
     //Get movie details
-    movie.title = ReadString("Enter movie title: ", true);
+    movie->title = ReadString("Enter movie title: ", true);
 
     std::cout << "Enter the run length (in minutes): ";
-    movie.runLength = ReadInt(0);
+    movie->runLength = ReadInt(0);
 
     std::cout << "Enter the release year (1900-2100): ";
-    std::cin >> movie.releaseYear;
-    movie.releaseYear = ReadInt(1900, 2100);
+    std::cin >> movie->releaseYear;
+    movie->releaseYear = ReadInt(1900, 2100);
 
-    movie.description = ReadString("Enter the optional description: ", false);
+    movie->description = ReadString("Enter the optional description: ", false);
 
     // Genres, up to 5
     for (int index = 0; index < 5; ++index)
@@ -221,22 +241,58 @@ Movie AddMovie()
         else if (genre == " ")
             continue;
 
-        movie.genres = movie.genres + ", " + genre;
+        movie->genres = movie->genres + ", " + genre;
     }
 
-    movie.isClassic = Confirm("Is this a classic movie?");
+    movie->isClassic = Confirm("Is this a classic movie?");
 
     return movie;
 }
 
-void DeleteMovie()
+Movie* FindMovie(Movie* movies[], int size, int id)
 {
-    Movie movie;
-    if (!Confirm("Are you sure you want to delete " + movie.title + "?"))
+    for (int index = 0; index < size; ++index)
+    {
+        //If pointer valid and movie matches ID then return it
+        if (movies[index] && movies[index]->id == id)
+            return movies[index];
+    };
+
+    return nullptr;
+}
+
+void RemoveMovieFromArray(Movie* movies[], int size, Movie* movie)
+{
+    for (int index = 0; index < size; ++index)
+    {
+        if (movies[index] == movie)
+        {
+            movies[index] = nullptr;
+            delete movie;
+            return;
+        }
+    }
+}
+
+void DeleteMovie(Movie* movies[], int size)
+{
+    //Get movie to delete
+    std::cout << "Enter the movie ID to delete: ";
+    int id = ReadInt(1);
+
+    //Find the movie
+    Movie* movie = FindMovie(movies, size, id);
+    if (!movie)
+    {
+        DisplayWarning("Movie not found");
+        return;
+    };
+
+    if (!Confirm("Are you sure you want to delete " + movie->title + "?"))
         return;
 
-    //TODO: Delete movie
-    movie.title = "";
+    //Delete movie
+    RemoveMovieFromArray(movies, size, movie);
 }
 
 void EditMovie()
@@ -263,18 +319,18 @@ void PointerDemo()
     *pInt = 5678;
 
     //An uninitialized pointer points to garbage
-    //Initialize pointer to memory 0 which is invalid
-    // NULL - C version, not preferred as it is still an int
-    // nullptr - preferred in C++
-    // float* pFloat = NULL;
+    // Initialize pointer to memory 0 which is invalid
+    //  NULL - C version, not preferred as it is still an int
+    //  nullptr - preferred in C++
+    //float* pFloat = NULL;    
     float* pFloat = nullptr;
-    //pFloat = 0; Don't do this
+    //pFloat = 0;   Don't do this
     //pFloat = 1234;
 
-    //Always ensure pointer is valid(not null) before dereferencing
+    //Always ensure pointer is valid (not null) before dereferencing
     //if (pFloat != nullptr) {
     if (pFloat) {
-    //This is going to crash hard
+        //This is going to crash hard if pointer is NULL
         *pFloat = 123.45;
     }
 
@@ -283,18 +339,18 @@ void PointerDemo()
     float localFloat = 123.45;
 
     //Initialize a pointer to a local variable or parameter
-    pFloat = &localFloat; //Address of a localFloat, must be a variable
-    *pFloat = 456.78; // localFloat = 456.78
+    pFloat = &localFloat;  //Address of localFloat, must be a variable
+    *pFloat = 456.78;   //localFloat = 456.78
 
-    //Initialize a pointer to an array of element
+    //Initialize a pointer to an array element
     float someFloats[10] = {0};
-    pFloat = &someFloats[1]; // Ptr references second element
+    pFloat = &someFloats[1];   //Ptr references second element
 
-    // Compiler error, types must exactly match
-    //pFloat = pInt; // float* = int*
+    //Compiler error, types must exactly match
+    //pFloat = pInt;   // float* = int*
 
-    // Dynamic Memory
-    // new_operator ::= new Type returns T*
+    //Dynamic memory
+    // new_op ::= new T  returns T*
     pFloat = new float;
     *pFloat = 89.76;
 
@@ -303,7 +359,8 @@ void PointerDemo()
         pFloat = new float;
         *pFloat = index;
 
-        //Deleting a pointer twice will crash or corrupt memory
+        //Deleting a pointer twice will crash or corrupt memory unless it is nullptr
+        //Immediately after deleting a pointer you should set it to nullptr
         delete pFloat;
         pFloat = nullptr;
 
@@ -313,21 +370,84 @@ void PointerDemo()
         //*pFloat = index; //Using a deallocated pointer may crash or corrupt
     }
 
-    // Pointer assignment must exactly match the types used (no coercion)
-    // pFloat == float*
+    //Pointer assignment must exactly match the types used (no coercion)
+    // pFloat = float*
     // someFloats[1] = float
     // &(Et) = T*
     // &(someFloats[1]) = &(float) = float*
 
 }
 
+// Pointers vs pass by ref
+void EditMovieWithPassByReference(Movie& movie) // C++ with  pass by ref, preferred
+{
+    movie.title = ReadString("Enter the new title: ", true);
+
+    std::cout << "Enter the new run length: ";
+    movie.runLength = ReadInt(0);
+}
+
+//Switching from ref to pointers
+// 1. Change ref parameter to pointer
+// 2. Validate the parameter
+// 3. Derefence to get underlying value or use pointer access op
+void EditMovieWithPointer(Movie* movie) //C with pointers, only if needed
+{
+    if (movie == nullptr)
+        return;
+
+    //movie.title = ReadString("Enter the new title: ", true);
+    movie->title = ReadString("Enter the new title: ", true);
+
+    std::cout << "Enter the new run length: ";
+    movie->runLength = ReadInt(0);
+}
+
+void ArrayAndPointerDemo()
+{
+    const int MaxSize = 100;
+
+    int numbers[MaxSize];
+
+    for (int index = 0; index < MaxSize; ++index)
+        numbers[index = index + 1];
+
+    for (int index = 0; index < MaxSize; ++index)
+        std::cout << numbers[index] << std::endl;
+
+    //Arrays and Pointers are interchangeable
+    int* pNumbers = numbers;
+    for (int index = 0; index < MaxSize; ++index)
+        pNumbers[index] = index + 1; //Can use array syntax with pointers and vice versa
+
+    //Can enumerate without using array element operator
+    int* pElement = numbers;
+    for (int index = 0; index < MaxSize; ++index)
+        //std::cout << numbers[index] << std::endl;
+        std::cout << *(numbers + index) << std::endl;
+
+    pElement = numbers;
+    for (int index = 0; index < MaxSize; ++index)
+        //std::cout << numbers[index] << std::endl;
+        std::cout << *(pElement++) << std::endl;
+}
+
 int main()
 {
-    PointerDemo();
+    //Movie movie;
+
+    ////Calling pass by reference function
+    //EditMovieWithPassByReference(movie);
+    //
+    ////Calling with pointer
+    //// 4. Must use address of if normal variable, or pointer
+    //EditMovieWithPointer(&movie);
+
+    //PointerDemo();
 
     //Cannot calculate the size of an array at runtime so use a const int variable
     const int MaximumMovies = 100;
-    Movie movies[MaximumMovies];
+    Movie* movies[MaximumMovies] = {0};
 
     //Display main menu
     bool done = false;
@@ -353,7 +473,7 @@ int main()
             case 'v': ViewMovies(movies, MaximumMovies); break;
 
             case 'D':
-            case 'd': DeleteMovie(); break;
+            case 'd': DeleteMovie(movies, MaximumMovies); break;
 
             case 'E':
             case 'e': EditMovie(); break;
