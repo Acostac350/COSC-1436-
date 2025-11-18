@@ -109,7 +109,7 @@ char GetMenu()
         std::cout << "A) Add (sum of values)" << std::endl;
         std::cout << "L) Largest value" << std::endl;
         std::cout << "S) Smallest value" << std::endl;
-        std::cout << "M) Mean(Average)" << std::endl;
+        std::cout << "M) Mean(Average value)" << std::endl;
         std::cout << "I) Insert new values" << std::endl;
         std::cout << "V) View all values" << std::endl;
         std::cout << "Q) Quit" << std::endl;
@@ -365,10 +365,9 @@ int main()
             if (valueCount > 0)
             {
                 double mean = GetMeanOfValues(values, valueCount);
-                std::cout << std::fixed << std::setprecision(4);
-                std::cout << "The average is = " << mean << std::endl << std::endl;
-                std::cout.unsetf(std::ios::fixed);
-                std::cout << std::setprecision(6);
+                std::cout << "The average is = "
+                          << std::fixed << std::setprecision(4) << mean
+                          << std::endl  << std::endl;
             } else
             {
                 DisplayError("No values available. Please insert values first.");
