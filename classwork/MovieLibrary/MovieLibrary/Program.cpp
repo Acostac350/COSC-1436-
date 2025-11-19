@@ -32,7 +32,7 @@ enum class ForegroundColor {
 };
 
 //Function prototypes
-void DisplayError(std::string);
+void DisplayError(std::string const&);
 
 void ResetTextColor()
 {
@@ -69,7 +69,7 @@ bool Confirm(std::string message)
 
 /// <summary>Displays an error message.</summary>
 /// <param name="message">Message to display.</param>
-void DisplayError(std::string message)
+void DisplayError(std::string const& message)
 {
     //std::cout << "\033[91m" 
     SetTextColor(ForegroundColor::BrightRed);
@@ -201,6 +201,10 @@ void ViewMovie(Movie* movie)
     std::cout << std::endl;
 }
 
+void ViewMovie(Movie& movie)
+{
+    ViewMovie(&movie);
+}
 void ViewMovies(Movie* movies[], int size)
 {
     //Enumerate movies until we run out
@@ -379,7 +383,7 @@ void PointerDemo()
 }
 
 // Pointers vs pass by ref
-void EditMovieWithPassByReference(Movie& movie) // C++ with  pass by ref, preferred
+void EditMovieWithPassByReference(Movie& movie)  //C++ with pass by ref, preferred
 {
     movie.title = ReadString("Enter the new title: ", true);
 
@@ -390,8 +394,8 @@ void EditMovieWithPassByReference(Movie& movie) // C++ with  pass by ref, prefer
 //Switching from ref to pointers
 // 1. Change ref parameter to pointer
 // 2. Validate the parameter
-// 3. Derefence to get underlying value or use pointer access op
-void EditMovieWithPointer(Movie* movie) //C with pointers, only if needed
+// 3. Dereference to get underlying value or use pointer access op
+void EditMovieWithPointer(Movie* movie)  //C with pointers, only if needed
 {
     if (movie == nullptr)
         return;
@@ -410,15 +414,22 @@ void ArrayAndPointerDemo()
     int numbers[MaxSize];
 
     for (int index = 0; index < MaxSize; ++index)
-        numbers[index = index + 1];
+        numbers[index] = index + 1;
 
     for (int index = 0; index < MaxSize; ++index)
         std::cout << numbers[index] << std::endl;
 
-    //Arrays and Pointers are interchangeable
+    //Arrays and pointers are interchangeable
+    // - Can assign a pointer to an array and vice versa
+    // - Can use array element operator on pointer
+    // - Can use pointer dereference on array variable
+    // - Can use either array element operator or pointer arithmetic to get to elements
+    // arr[N] = *(arr + N)
+    // Pointer arithmetic means adding/subtracting int from pointer moves the value
+    //   by a full element size, not bytes (cannot point into a partial element)
     int* pNumbers = numbers;
     for (int index = 0; index < MaxSize; ++index)
-        pNumbers[index] = index + 1; //Can use array syntax with pointers and vice versa
+        pNumbers[index] = index + 1;   //Can use array syntax with pointers and vice versa
 
     //Can enumerate without using array element operator
     int* pElement = numbers;
@@ -432,14 +443,69 @@ void ArrayAndPointerDemo()
         std::cout << *(pElement++) << std::endl;
 }
 
+int* ResizeArray(int array[], int oldSize, int newSize)
+{
+    if (newSize <= 0)
+    {
+        DisplayError("I don't think so");
+        return nullptr;
+    }
+    //int* pNewValue = new int;
+
+    //newSize > 0
+    int* pNewArray = new int[newSize];
+
+    //Init the array because we cannot use init syntax with new
+    for (int index = 0; index < newSize; ++index)
+        pNewArray[index] = 0;
+
+    //Copy values from old to new array
+    oldSize = (oldSize < newSize) ? oldSize : newSize;
+    for (int index = 0; index < oldSize; ++index)
+        pNewArray[index] = array[index];
+
+    return pNewArray;
+}
+
+void DeleteArray(int* array)
+{
+    // Rules
+    // 1. Array better have been allocated using new
+    // 2. You must delete the entire array using delete[]
+    // 3. If delete[] is called on a null ptr it will most likely crash
+    if (array)
+        delete[] array;
+    array = nullptr;
+}
+
+int youWillNeverDoThis = 100;
+int* ReturningAPointerDemo(int someValue, int values[])
+{
+    int* ptr = nullptr;
+
+    // Valid cases for returning a pointer
+    // 1. Dynamically allocated memory using new
+    ptr = new int;
+    // 2. Elements of an array parameter
+    ptr = &values[0];
+    // 3. Global variables
+    ptr = &youWillNeverDoThis;
+
+    // Invalid cases
+    // 1. Parameters  (ptr = &someValue)
+    // 2. Local variables (int localVar; ptr= &localVar;)
+
+    return nullptr;
+}
+
 int main()
 {
     //Movie movie;
 
     ////Calling pass by reference function
     //EditMovieWithPassByReference(movie);
-    //
-    ////Calling with pointer
+
+    ////Calling with pointer 
     //// 4. Must use address of if normal variable, or pointer
     //EditMovieWithPointer(&movie);
 
