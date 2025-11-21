@@ -136,7 +136,7 @@ char GetMenu()
     return choice;
 }
 
-/// <summary> Returns the largest value in the array.
+/// <summary> Gets and Returns the largest value in the array.
 /// Validates that count > 0.
 /// </summary>
 /// <param name="values">Array of values</param>
@@ -238,11 +238,11 @@ void DisplayValues(int values[], int count)
 {
     if (count <= 0)
     {
-        std::cout << "No values in the array to display." << std::endl << std::endl;
+        std::cout << "No values stored to display." << std::endl << std::endl;
         return;
     }
 
-    std::cout << "Array values: " << std::endl;
+    std::cout << "Total stored values: " << std::endl;
 
     for (int index = 0; index < count; index = index + 1)
     {
@@ -269,7 +269,7 @@ int InsertNewValues(int values[], int maxSize, int currentCount)
 {
     if (currentCount >= maxSize)
     {
-        std::cout << "The array is already full. Cannot insert more values." << std::endl << std::endl;
+        std::cout << "Limit reached. Cannot insert more values." << std::endl << std::endl;
         return currentCount;
     }
 
@@ -305,6 +305,77 @@ int InsertNewValues(int values[], int maxSize, int currentCount)
     return count;
 }
 
+/// <summary>Handles a single menu choice.
+/// Updates value count if needed.</summary>
+/// <param name="choice">Menu choice character</param>
+/// <param name="values">Array of values</param>
+/// <param name="valueCount">Pass by Ref to current count of values</param>
+/// <param name="maxSize">Maximum allowed size of the array.</param>
+/// <returns>True if user chose to quit, false otherwise.</returns>
+bool MenuChoices(char choice, int values[], int& valueCount, int maxSize)
+{
+    if (choice == 'Q' || choice == 'q')
+    {
+        return true;
+    } else if (choice == 'L' || choice == 'l')
+    {
+        // Largest
+        if (valueCount > 0)
+        {
+            int largest = GetLargestValue(values, valueCount);
+            std::cout << "The Largest value is = " << largest << std::endl << std::endl;
+        } else
+        {
+            DisplayError("No values available. Please insert values first.");
+        }
+    } else if (choice == 'S' || choice == 's')
+    {
+        // Smallest
+        if (valueCount > 0)
+        {
+            int smallest = GetSmallestValue(values, valueCount);
+            std::cout << "The Smallest value is = " << smallest << std::endl << std::endl;
+        } else
+        {
+            DisplayError("No values available. Please insert values first.");
+        }
+    } else if (choice == 'A' || choice == 'a')
+    {
+        // Sum/Add
+        if (valueCount > 0)
+        {
+            int sum = GetSumOfValues(values, valueCount);
+            std::cout << "The Sum of values is = " << sum << std::endl << std::endl;
+        } else
+        {
+            DisplayError("No values available. Please insert values first.");
+        }
+    } else if (choice == 'M' || choice == 'm')
+    {
+        // Mean/Average
+        if (valueCount > 0)
+        {
+            double mean = GetMeanOfValues(values, valueCount);
+            std::cout << "The average is = "
+                << std::fixed << std::setprecision(4) << mean
+                << std::endl << std::endl;
+        } else
+        {
+            DisplayError("No values available. Please insert values first.");
+        }
+    } else if (choice == 'V' || choice == 'v')
+    {
+        // View
+        DisplayValues(values, valueCount);
+    } else if (choice == 'I' || choice == 'i')
+    {
+        // Insert
+        valueCount = InsertNewValues(values, maxSize, valueCount);
+    }
+
+    return false;
+}
+
 int main()
 {
     DisplayInfo();
@@ -313,74 +384,15 @@ int main()
     int values[MAX_VALUES];
     int valueCount = 0;
 
-    // Story 2: initial input
     valueCount = GetInitialValues(values, MAX_VALUES);
 
     bool quit = false;
 
-    // Story 3–9: main menu loop
+    // main menu loop
     while (!quit)
     {
         char choice = GetMenu();
-
-        if (choice == 'Q' || choice == 'q')
-        {
-            quit = true;
-        } else if (choice == 'L' || choice == 'l')
-        {
-            // Story 4: largest
-            if (valueCount > 0)
-            {
-                int largest = GetLargestValue(values, valueCount);
-                std::cout << "The Largest value is = " << largest << std::endl << std::endl;
-            } else
-            {
-                DisplayError("No values available. Please insert values first.");
-            }
-        } else if (choice == 'S' || choice == 's')
-        {
-            // Story 5: Smallest
-            if (valueCount > 0)
-            {
-                int smallest = GetSmallestValue(values, valueCount);
-                std::cout << "The Smallest value is = " << smallest << std::endl << std::endl;
-            } else
-            {
-                DisplayError("No values available. Please insert values first.");
-            }
-        } else if (choice == 'A' || choice == 'a')
-        {
-            // Story 6: Sum = addition
-            if (valueCount > 0)
-            {
-                int sum = GetSumOfValues(values, valueCount);
-                std::cout << "The Sum of values is = " << sum << std::endl << std::endl;
-            } else
-            {
-                DisplayError("No values available. Please insert values first.");
-            }
-        } else if (choice == 'M' || choice == 'm')
-        {
-            // Story 7: Mean = Average
-            if (valueCount > 0)
-            {
-                double mean = GetMeanOfValues(values, valueCount);
-                std::cout << "The average is = "
-                          << std::fixed << std::setprecision(4) << mean
-                          << std::endl  << std::endl;
-            } else
-            {
-                DisplayError("No values available. Please insert values first.");
-            }
-        } else if (choice == 'V' || choice == 'v')
-        {
-            // Story 8: View
-            DisplayValues(values, valueCount);
-        } else if (choice == 'I' || choice == 'i')
-        {
-            // Story 9: Insert
-            valueCount = InsertNewValues(values, MAX_VALUES, valueCount);
-        }
+        quit = MenuChoices(choice, values, valueCount, MAX_VALUES);
     }
 
     std::cout << "Adios!" << std::endl;
