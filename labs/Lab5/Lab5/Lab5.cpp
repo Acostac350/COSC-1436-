@@ -14,8 +14,8 @@ Fall 2025
 
 struct Stop
 {
-    int x;
-    int y;
+    int xCoordinate;
+    int yCoordinate;
 };
 
 /// <summary>Displays general error message with provided details.</summary>
@@ -35,15 +35,15 @@ void DisplayInfo()
 }
 
 /// <summary>Reads an integer from the user and validates input.</summary>
-/// <param name="prompt">Prompt to display.</param>
+/// <param name="message">Message to display.</param>
 /// <returns>Validated integer value.</returns>
-int ReadInt(const std::string& prompt)
+int ReadInt(const std::string& message)
 {
     int value;
 
     while (true)
     {
-        std::cout << prompt;
+        std::cout << message;
 
         if (std::cin >> value)
         {
@@ -57,34 +57,34 @@ int ReadInt(const std::string& prompt)
 }
 
 /// <summary>Reads an integer within a specified range.</summary>
-/// <param name="prompt">Prompt to display.</param>
+/// <param name="message">message to display.</param>
 /// <param name="minValue">Minimum allowed value.</param>
 /// <param name="maxValue">Maximum allowed value.</param>
 /// <returns>Validated integer in range.</returns>
-int ReadIntInRange(const std::string& prompt, int minValue, int maxValue)
+int ReadIntInRange(const std::string& message, int minValue, int maxValue)
 {
-    int value = ReadInt(prompt);
+    int value = ReadInt(message);
 
     while (value < minValue || value > maxValue)
     {
         DisplayError("Value must be between " + std::to_string(minValue) +
                      " and " + std::to_string(maxValue) + ".");
-        value = ReadInt(prompt);
+        value = ReadInt(message);
     }
 
     return value;
 }
 
 /// <summary>Reads a single character from the user.</summary>
-/// <param name="prompt">Prompt to display.</param>
+/// <param name="message">Message to display.</param>
 /// <returns>Character entered by the user.</returns>
-char ReadChar(const std::string& prompt)
+char ReadChar(const std::string& message)
 {
     char value;
 
     while (true)
     {
-        std::cout << prompt;
+        std::cout << message;
 
         if (std::cin >> value)
         {
@@ -99,13 +99,13 @@ char ReadChar(const std::string& prompt)
 }
 
 /// <summary>Reads a Yes/No answer from the user (Y/N). Case insensitive. </summary>
-/// <param name="prompt">Prompt to display.</param>
+/// <param name="message">Message to display.</param>
 /// <returns>True if user enters Y, false if user enters N.</returns>
-bool ReadYesNo(const std::string& prompt)
+bool ReadYesNo(const std::string& message)
 {
     while (true)
     {
-        char answer = ReadChar(prompt);
+        char answer = ReadChar(message);
         answer = static_cast<char>(std::toupper(static_cast<unsigned char>(answer)));
 
         if (answer == 'Y')
@@ -282,15 +282,15 @@ int ReadSpeed()
 }
 
 /// <summary>Calculates distance between two points.</summary>
-/// <param name="a">First stop.</param>
-/// <param name="b">Second stop.</param>
+/// <param name="firstStop">First stop.</param>
+/// <param name="secondStop">Second stop.</param>
 /// <returns>Distance as a double.</returns>
-double CalculateDistance(const Stop& a, const Stop& b)
+double CalculateDistance(const Stop& firstStop, const Stop& secondStop)
 {
-    double dx = static_cast<double>(b.x - a.x);
-    double dy = static_cast<double>(b.y - a.y);
+    double deltaX = static_cast<double>(secondStop.xCoordinate - firstStop.xCoordinate);
+    double deltaY = static_cast<double>(secondStop.yCoordinate - firstStop.yCoordinate);
 
-    double sumSquares = dx * dx + dy * dy;
+    double sumSquares = deltaX * deltaX + deltaY * deltaY;
 
     return std::sqrt(sumSquares);
 }
@@ -307,12 +307,12 @@ void AddStop(Stop* trip[], int maxStops)
 
     std::cout << "Add a new stop to your trip." << std::endl;
 
-    int x = ReadIntInRange("Enter X coordinate (-100 to 100): ", -100, 100);
-    int y = ReadIntInRange("Enter Y coordinate (-100 to 100): ", -100, 100);
+    int xCoordinateInput = ReadIntInRange("Enter X coordinate (-100 to 100): ", -100, 100);
+    int yCoordinateInput = ReadIntInRange("Enter Y coordinate (-100 to 100): ", -100, 100);
 
     Stop* newStop = new Stop;
-    newStop->x = x;
-    newStop->y = y;
+    newStop->xCoordinate = xCoordinateInput;
+    newStop->yCoordinate = yCoordinateInput;
 
     bool added = AppendStop(trip, maxStops, newStop);
 
@@ -349,8 +349,8 @@ void GetViewTrip(Stop* trip[], int maxStops, int speed)
     std::cout << "--------------------------------------------------------------------------" << std::endl;
 
     Stop previousLocation;
-    previousLocation.x = 0;
-    previousLocation.y = 0;
+    previousLocation.xCoordinate = 0;
+    previousLocation.yCoordinate = 0;
 
     double totalDistance = 0.0;
     double totalMinutes = 0.0;
@@ -383,7 +383,7 @@ void GetViewTrip(Stop* trip[], int maxStops, int speed)
 
             std::cout << std::setw(4) << stopNumber
                 << std::setw(15) << " "
-                << "(" << trip[index]->x << ", " << trip[index]->y << ")";
+                << "(" << trip[index]->xCoordinate << ", " << trip[index]->yCoordinate << ")";
 
             std::cout << std::setw(15) << std::fixed << std::setprecision(2) << distance;
             std::cout << std::setw(20) << std::fixed << std::setprecision(2) << minutes << std::endl;
@@ -393,9 +393,9 @@ void GetViewTrip(Stop* trip[], int maxStops, int speed)
     }
 
     std::cout << "---------------------------------------------------------------------------" << std::endl;
-    std::cout << std::setw(4) << stopCount
+    std::cout << std::setw(4) << "Stops: " << stopCount
         << std::setw(26) << " "
-        << std::setw(15) << std::fixed << std::setprecision(2) << totalDistance
+        << std::setw(9) << std::fixed << std::setprecision(2) << totalDistance
         << std::setw(20) << std::fixed << std::setprecision(2) << totalMinutes
         << std::endl << std::endl;
 }
@@ -410,7 +410,16 @@ void DeleteStop(Stop* trip[], int maxStops)
         return;
     }
 
-    int stopNumber = ReadIntInRange("Enter the stop number you wish to delete (1 or higher): ", 1, maxStops);
+    int stopCount = CountStops(trip, maxStops);
+    if (stopCount == 0)
+    {
+        std::cout << "There are no stops to delete." << std::endl << std::endl;
+        return;
+    }
+
+    int stopNumber = ReadIntInRange(
+        "Enter the stop number you wish to delete (1-" + std::to_string(stopCount) + "): ",
+        1, stopCount);
 
     Stop* stop = GetStopByNumber(trip, maxStops, stopNumber);
 
